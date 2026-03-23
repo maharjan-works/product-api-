@@ -7,6 +7,8 @@ import com.maharjanworks.product_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
@@ -19,5 +21,12 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = CategoryMapper.toCategory(categoryDTO);
         category = categoryRepository.save(category);
         return CategoryMapper.toCategoryDTO(category);
+    }
+
+    @Override
+    public List<CategoryDTO> getCategories() {
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream().map(CategoryMapper::toCategoryDTO).toList();
     }
 }
