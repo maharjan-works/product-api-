@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
         /*
-         *  what productDTO has?
+         *  what productDTO has? all coming from controller, even categoryId
          *  id, name, description, price, categoryId
          */
 
@@ -50,5 +50,15 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(ProductMapper::toProductDTO)
                 .toList();
+    }
+
+    @Override
+    public ProductDTO getProductById(Long productId) {
+
+        Product product = productRepository.findById(productId).
+                orElseThrow(() -> new RuntimeException("Product not found with id: "+ productId));
+
+        //convert to dto and return
+        return ProductMapper.toProductDTO(product);
     }
 }

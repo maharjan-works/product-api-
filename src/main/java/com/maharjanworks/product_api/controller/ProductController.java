@@ -29,6 +29,11 @@ public class ProductController {
     }
 
     //get product by id
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable("id") Long productId){
+        return new ResponseEntity<>(productService.getProductById(productId), HttpStatus.OK);
+    }
     //update product
+
     //delete product
  }
