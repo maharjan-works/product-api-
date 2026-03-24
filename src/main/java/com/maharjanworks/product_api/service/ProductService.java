@@ -13,6 +13,7 @@ public interface ProductService {
     List<ProductDTO> getProducts();
 
     //get product by id
+    ProductDTO getProductById(Long productId);
 
     //update product
 
