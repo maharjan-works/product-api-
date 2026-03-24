@@ -88,6 +88,43 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDTO patchProduct(Long productId, Map<String, Object> patchProductRequest) {
+        System.out.println("patchRequestMap: "+ patchProductRequest + " and productId: " + productId);
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found."));
+
+        Product finalProduct = product;
+        patchProductRequest.forEach((key, value) ->{
+            switch(key) {
+                case "name":
+                    finalProduct.setName((String) value);
+                    break;
+                case "description":
+                    finalProduct.setDescription((String) value);
+                    break;
+                case "price":
+                    finalProduct.setPrice((Double) value);
+                    break;
+                case "categoryId":
+                    Long categoryId = ((Integer) value).longValue();
+                    Category category = categoryRepository.findById(categoryId)
+                            .orElseThrow(() -> new RuntimeException("Category not found."));
+                    finalProduct.setCategory(category);
+                    break;
+                default:
+                    throw new IllegalArgumentException("invalid field: "+ key);
+            }
+        });
+        //save patched resource
+        System.out.println("final Product" + finalProduct);
+        product = productRepository.save(finalProduct);
+
+        //convert to dto and return
+        return ProductMapper.toProductDTO(product);
+    }
+
+    @Override
     public String deleteProduct(Long productId) {
         productRepository.deleteById(productId);
         return "Product Id: "+ productId + " deleted successfully from db";

@@ -20,6 +20,7 @@ public interface ProductService {
     ProductDTO updateProduct(Long productId, ProductDTO productDTO);
 
     //patch product
+    ProductDTO patchProduct(Long productId, Map<String,Object> patchProductRequest);
 
     //delete product
     String deleteProduct(Long productId);
