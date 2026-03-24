@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -40,5 +42,13 @@ public class ProductServiceImpl implements ProductService {
 
         //change saved Product to dto and return dto
         return  ProductMapper.toProductDTO(product);
+    }
+
+    @Override
+    public List<ProductDTO> getProducts() {
+    return  productRepository.findAll()
+                .stream()
+                .map(ProductMapper::toProductDTO)
+                .toList();
     }
 }
