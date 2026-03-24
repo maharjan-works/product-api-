@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -34,6 +35,12 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProductById(productId), HttpStatus.OK);
     }
     //update product
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long productId,@RequestBody ProductDTO productDTO){
+        return new ResponseEntity<>(productService.updateProduct(productId,productDTO), HttpStatus.OK);
+    }
+
+    //patch Product
 
     //delete product
  }
