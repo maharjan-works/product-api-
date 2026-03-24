@@ -87,5 +87,11 @@ public class ProductServiceImpl implements ProductService {
         return ProductMapper.toProductDTO(product);
     }
 
+    @Override
+    public String deleteProduct(Long productId) {
+        productRepository.deleteById(productId);
+        return "Product Id: "+ productId + " deleted successfully from db";
+    }
+
 
 }
