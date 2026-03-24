@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
         //first, check  if category exists or not,
         //if not, throw Exception
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                        .orElseThrow(() -> new RuntimeException(("Category is not found!")));
+                .orElseThrow(() -> new RuntimeException(("Category is not found!")));
 
         //dto to entity
         Product product = ProductMapper.toProduct(productDTO, category);
@@ -41,12 +42,12 @@ public class ProductServiceImpl implements ProductService {
         product = productRepository.save(product);
 
         //change saved Product to dto and return dto
-        return  ProductMapper.toProductDTO(product);
+        return ProductMapper.toProductDTO(product);
     }
 
     @Override
     public List<ProductDTO> getProducts() {
-    return  productRepository.findAll()
+        return productRepository.findAll()
                 .stream()
                 .map(ProductMapper::toProductDTO)
                 .toList();
@@ -56,9 +57,35 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getProductById(Long productId) {
 
         Product product = productRepository.findById(productId).
-                orElseThrow(() -> new RuntimeException("Product not found with id: "+ productId));
+                orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
         //convert to dto and return
         return ProductMapper.toProductDTO(product);
     }
+
+    @Override
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
+
+        //fetch product by id
+        var product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found."));
+
+        // check if category existed,
+        var category = categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found."));
+
+        //update fetched product with new dataset
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setCategory(category);
+
+        //save product
+        product = productRepository.save(product);
+
+        //convert to dto and return
+        return ProductMapper.toProductDTO(product);
+    }
+
+
 }
