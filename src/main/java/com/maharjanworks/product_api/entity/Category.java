@@ -20,7 +20,7 @@ public class Category {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     List<Product> products = new ArrayList<>();
 
     public Long getId() {
