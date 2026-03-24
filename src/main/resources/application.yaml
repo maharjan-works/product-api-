@@ -2,6 +2,15 @@ spring:
   application:
     name: product-api
   datasource:
-    url: jdbc:h2:mem:test_db
+#    url: jdbc:h2:mem:test_db
+    url: jdbc:mysql://localhost:3306/product_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
