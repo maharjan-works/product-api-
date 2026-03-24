@@ -22,6 +22,7 @@ public interface ProductService {
     //patch product
 
     //delete product
+    String deleteProduct(Long productId);
 
 
 }
