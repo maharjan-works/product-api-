@@ -4,6 +4,8 @@ import com.maharjanworks.product_api.dto.ProductDTO;
 import com.maharjanworks.product_api.entity.Category;
 import com.maharjanworks.product_api.entity.Product;
 import com.maharjanworks.product_api.exception.CategoryNotFoundException;
+import com.maharjanworks.product_api.exception.NoFieldFoundException;
+import com.maharjanworks.product_api.exception.ProductNotFoundException;
 import com.maharjanworks.product_api.mapper.ProductMapper;
 import com.maharjanworks.product_api.repository.CategoryRepository;
 import com.maharjanworks.product_api.repository.ProductRepository;
@@ -58,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getProductById(Long productId) {
 
         Product product = productRepository.findById(productId).
-                orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
 
         //convert to dto and return
         return ProductMapper.toProductDTO(product);
@@ -69,11 +71,11 @@ public class ProductServiceImpl implements ProductService {
 
         //fetch product by id
         var product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found."));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
 
         // check if category existed,
         var category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found."));
+                .orElseThrow(() -> new CategoryNotFoundException("Category id: " + productDTO.getCategoryId() + " not found"));
 
         //update fetched product with new dataset
         product.setName(productDTO.getName());
@@ -91,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO patchProduct(Long productId, Map<String, Object> patchProductRequest) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found."));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
 
         Product finalProduct = product;
         patchProductRequest.forEach((key, value) ->{
@@ -112,11 +114,10 @@ public class ProductServiceImpl implements ProductService {
                     finalProduct.setCategory(category);
                     break;
                 default:
-                    throw new IllegalArgumentException("invalid field: "+ key);
+                    throw new NoFieldFoundException("invalid field: "+ key);
             }
         });
         //save patched resource
-        System.out.println("final Product" + finalProduct);
         product = productRepository.save(finalProduct);
 
         //convert to dto and return
@@ -125,6 +126,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String deleteProduct(Long productId) {
+        productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product id: "+ productId + " not found!"));
         productRepository.deleteById(productId);
         return "Product Id: "+ productId + " deleted successfully from db";
     }
