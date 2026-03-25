@@ -3,6 +3,7 @@ package com.maharjanworks.product_api.service;
 import com.maharjanworks.product_api.dto.ProductDTO;
 import com.maharjanworks.product_api.entity.Category;
 import com.maharjanworks.product_api.entity.Product;
+import com.maharjanworks.product_api.exception.CategoryNotFoundException;
 import com.maharjanworks.product_api.mapper.ProductMapper;
 import com.maharjanworks.product_api.repository.CategoryRepository;
 import com.maharjanworks.product_api.repository.ProductRepository;
@@ -33,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
         //first, check  if category exists or not,
         //if not, throw Exception
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException(("Category is not found!")));
+                .orElseThrow(() -> new CategoryNotFoundException("Category id: "+productDTO.getCategoryId() + " not found!"));
 
         //dto to entity
         Product product = ProductMapper.toProduct(productDTO, category);
@@ -89,8 +90,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO patchProduct(Long productId, Map<String, Object> patchProductRequest) {
-        System.out.println("patchRequestMap: "+ patchProductRequest + " and productId: " + productId);
-
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found."));
 
