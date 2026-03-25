@@ -51,4 +51,32 @@ public class ApplicationExceptionHandler {
     }
 
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request){
+
+        var exceptionResponse = ExceptionResponse.builder()
+                .apiPath(request.getDescription(false))
+                .httpStatus(HttpStatus.NOT_FOUND)
+                .errorMessage(ex.getMessage())
+                .errorExistAt(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
+
+    @ExceptionHandler(NoFieldFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleProductNotFoundException(NoFieldFoundException ex, WebRequest request){
+
+        var exceptionResponse = ExceptionResponse.builder()
+                .apiPath(request.getDescription(false))
+                .httpStatus(HttpStatus.NOT_FOUND)
+                .errorMessage(ex.getMessage())
+                .errorExistAt(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
+
 }
