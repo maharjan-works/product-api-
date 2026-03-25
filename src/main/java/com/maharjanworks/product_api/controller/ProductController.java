@@ -3,7 +3,10 @@ package com.maharjanworks.product_api.controller;
 import com.maharjanworks.product_api.dto.ProductDTO;
 import com.maharjanworks.product_api.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,8 @@ import java.util.Map;
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
+    private static final Logger logger= LoggerFactory.getLogger(ProductController.class);
+
     @Autowired
     private ProductService productService;
 
@@ -27,6 +32,10 @@ public class ProductController {
     @Operation(
             summary = "add a product",
             description = "an endpoint to add a product"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "CREATED"
     )
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO){

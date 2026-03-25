@@ -10,6 +10,8 @@ import com.maharjanworks.product_api.mapper.ProductMapper;
 import com.maharjanworks.product_api.repository.CategoryRepository;
 import com.maharjanworks.product_api.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Autowired
     private ProductRepository productRepository;
@@ -35,9 +40,11 @@ public class ProductServiceImpl implements ProductService {
 
         //first, check  if category exists or not,
         //if not, throw Exception
+        logger.info("ProductDTO: {} received.", productDTO);
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new CategoryNotFoundException("Category id: "+productDTO.getCategoryId() + " not found!"));
-
+                .orElseThrow(() ->
+                        new CategoryNotFoundException("Category id: "+productDTO.getCategoryId() + " not found!"));
+        logger.info("Category Id: {} found.", productDTO.getCategoryId());
         //dto to entity
         Product product = ProductMapper.toProduct(productDTO, category);
 
@@ -45,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
         product = productRepository.save(product);
 
         //change saved Product to dto and return dto
+        logger.info("product saved successfully.");
         return ProductMapper.toProductDTO(product);
     }
 
@@ -59,10 +67,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO getProductById(Long productId) {
 
+        logger.info("productId: {} received", productId);
+
         Product product = productRepository.findById(productId).
                 orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
 
         //convert to dto and return
+        logger.info("product with id: {} returned.",productId);
         return ProductMapper.toProductDTO(product);
     }
 

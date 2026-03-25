@@ -14,3 +14,18 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+#logging:
+#  level:
+#    root: debug
+
+#logging:
+#  level:
+#    org.springframework.web: debug
+#logging:
+#  level:
+#    com.maharjanworks.product_api: error
+
+logging:
+  config: classpath:logback-spring.xml
+
